@@ -1,13 +1,14 @@
-# Generated artefacts
-outputs/figures/*
+# Generated artefacts (per-run outputs)
 outputs/checkpoints/*
 outputs/predictions/*
 outputs/shap/*
 outputs/*.csv
-!outputs/figures/.gitkeep
 !outputs/checkpoints/.gitkeep
 !outputs/predictions/.gitkeep
 !outputs/shap/.gitkeep
+# Note: outputs/figures/ holds the figure archive from the original
+# analysis notebooks (committed). Future per-run PNGs from `lake train`
+# will land here too — they can be gitignored later if needed.
 
 # Input data (project-specific)
 data/

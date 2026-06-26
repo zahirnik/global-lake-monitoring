@@ -10,27 +10,103 @@ Random Forest baselines, applied to a global dataset of ~2,700 lakes.
 
 ---
 
-## Sample results
+## Pipeline walk-through
 
-**Measured vs. predicted lake area (XGBoost baseline)** — train R² = 1.00,
-held-out test R² = 0.85.
+The following figures step through the project: data overview → EDA →
+baseline models → global interpretability → stratified interpretability.
 
-![scatter — measured vs. predicted](docs/figures/scatter_xgb.png)
+### 1 — Lake coverage across Köppen-Geiger climate classes
 
-**Transformer training curve** — train/validation MSE per epoch.
+Of the ~2,700 lakes in the global panel, the majority sit in cold,
+continental climates (`Dfb`, `Dfc`), with sparser representation in tropical
+and polar regimes.
 
-![transformer loss curve](docs/figures/loss_transformer.png)
+![lakes by climate](docs/figures/01_lakes_by_climate.png)
 
-**SHAP feature contributions across climate classes** — kernel density of
-SHAP values per feature, coloured by Köppen-Geiger climate group. Shows that
-the model relies on different drivers for different climate regimes.
+### 2 — Lake coverage across latitude bands
 
-![SHAP feature distributions by climate](docs/figures/shap_by_climate.png)
+Mid-to-high northern latitudes dominate, reflecting where most monitored
+freshwater lakes physically are.
 
-**Feature pair-plot from the EDA notebook** — joint and marginal
-distributions across the 9 environmental drivers used during exploration.
+![lakes by latitude band](docs/figures/02_lakes_by_latitude.png)
 
-![EDA pair plot](docs/figures/eda_pairplot.png)
+### 3 — Feature pair-plot (EDA)
+
+Joint and marginal distributions of the environmental features used to
+predict lake area — useful for spotting correlations and outlier behaviour
+before modelling.
+
+![EDA pair plot](docs/figures/03_eda_pairplot.png)
+
+### 4 — Baseline: Random Forest
+
+Measured vs. predicted lake area for the Random Forest baseline (train left,
+test right). Strong fit on training; non-trivial residual structure on test.
+
+![Random Forest scatter](docs/figures/04_scatter_random_forest.png)
+
+### 5 — Baseline: XGBoost
+
+The XGBoost baseline tightens training fit further (R² ≈ 1.0) and keeps a
+held-out R² of ~0.85 on the temporal test split.
+
+![XGBoost scatter](docs/figures/05_scatter_xgboost.png)
+
+### 6 — Permutation feature importance
+
+Permutation importance computed across 83 representative lakes for the RF
+regressor — gives a model-agnostic ranking of which inputs matter most.
+
+![permutation importance](docs/figures/06_permutation_importance.png)
+
+### 7 — Global SHAP feature importance (mean |SHAP|)
+
+Mean absolute SHAP value per feature. Forest cover, grassland, and human
+population dominate the model's predictions of lake surface area.
+
+![SHAP mean importance bar](docs/figures/07_shap_mean_importance.png)
+
+### 8 — SHAP beeswarm: per-sample contributions
+
+Each dot is one (lake, year). Horizontal position is the SHAP value (impact
+on the prediction); colour is the feature value. Shows direction-of-effect
+as well as magnitude.
+
+![SHAP beeswarm](docs/figures/08_shap_beeswarm.png)
+
+### 9 — SHAP waterfall: a single prediction
+
+Decomposition of one prediction into per-feature contributions. Reads from
+the model's baseline expectation (bottom) up to the final prediction (top).
+
+![SHAP waterfall](docs/figures/09_shap_waterfall_single.png)
+
+### 10 — SHAP dependence plot
+
+Interaction view: SHAP value of `GRASS` vs. the `GRASS` feature value,
+coloured by `Population`. Reveals non-linear regimes and where features
+co-act.
+
+![SHAP dependence plot](docs/figures/10_shap_dependence.png)
+
+### 11 — SHAP distributions stratified by climate
+
+Kernel density of SHAP values per feature, coloured by Köppen-Geiger climate
+group. Shows the model relies on different drivers in different climate
+regimes.
+
+![SHAP by climate](docs/figures/11_shap_by_climate.png)
+
+### 12 — SHAP distributions stratified by latitude band
+
+Same idea as (11) but stratified geographically rather than climatically —
+useful for sanity-checking that the model isn't latching onto purely
+spatial confounds.
+
+![SHAP by latitude](docs/figures/12_shap_by_latitude.png)
+
+> All 92 raw figures from the original analysis notebooks are archived
+> under [`outputs/figures/`](outputs/figures), grouped by notebook.
 
 ---
 
