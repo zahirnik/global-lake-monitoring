@@ -1,15 +1,36 @@
 # Global Lake Monitoring
 
-A clean Python package for predicting **lake surface area** from environmental
+A Python package for predicting **lake surface area** from environmental
 features (land cover, climate, hydrology) and explaining the predictions with
-**SHAP** values.
+**SHAP** values. Built around a 1D Transformer regressor with XGBoost and
+Random Forest baselines, applied to a global dataset of ~2,700 lakes.
 
-> Importable as `import lake` — the Python package keeps the short name; the
-> repository name reflects the project's intent.
+> Importable as `import lake`. CLI exposed as `lake train …` and
+> `lake explain …`.
 
-This is a refactor of the original [`lake-main`](../lake-main) notebook-style
-project into an installable package with a CLI, type-checked configs, and a
-single output directory for all generated artefacts.
+---
+
+## Sample results
+
+**Measured vs. predicted lake area (XGBoost baseline)** — train R² = 1.00,
+held-out test R² = 0.85.
+
+![scatter — measured vs. predicted](docs/figures/scatter_xgb.png)
+
+**Transformer training curve** — train/validation MSE per epoch.
+
+![transformer loss curve](docs/figures/loss_transformer.png)
+
+**SHAP feature contributions across climate classes** — kernel density of
+SHAP values per feature, coloured by Köppen-Geiger climate group. Shows that
+the model relies on different drivers for different climate regimes.
+
+![SHAP feature distributions by climate](docs/figures/shap_by_climate.png)
+
+**Feature pair-plot from the EDA notebook** — joint and marginal
+distributions across the 9 environmental drivers used during exploration.
+
+![EDA pair plot](docs/figures/eda_pairplot.png)
 
 ---
 
@@ -116,20 +137,17 @@ explicitly, so the package works fine in headless / CI environments.
 
 ---
 
-## Notable improvements vs. the original
+## Design notes
 
-* **Importable package** (`from lake.training import train_transformer`)
-  instead of `from src.models import ...` (which required cwd to be the
-  project root).
-* **Single `LakeConfig`** for all paths and hyperparameters; no more magic
-  constants spread across files. Loadable from YAML.
-* **Central `outputs/figures/`** — every figure ends up in one folder.
-* **CLI** with subcommands (`lake train`, `lake explain lakewise`, ...).
-* **Bug fix:** `climate_wise_analysis` actually runs the per-climate analysis
-  now (the legacy `__main__` accidentally called the lake-wise function).
-* **Bug fix:** the debug 500-row cap in `train.py` is opt-in (`debug_row_limit`).
-* **Better separation of concerns** — viz utilities can't crash the training
-  loop, training code doesn't know about plotting libraries, etc.
+* **Importable package** — `from lake.training import train_transformer`.
+* **Single `LakeConfig`** dataclass for all paths and hyperparameters,
+  loadable from YAML.
+* **Central `outputs/figures/`** — every figure produced by the package ends
+  up in one folder, never via `plt.show()`, so it runs headlessly too.
+* **CLI** with subcommands: `lake train`, `lake explain lakewise`,
+  `lake explain climatewise`, `lake explain tree`.
+* **Smoke tests** under `tests/` run on synthetic data and don't need the real
+  CSV to pass.
 
 ---
 
