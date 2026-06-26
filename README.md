@@ -1,8 +1,11 @@
-# lake
+# Global Lake Monitoring
 
 A clean Python package for predicting **lake surface area** from environmental
 features (land cover, climate, hydrology) and explaining the predictions with
 **SHAP** values.
+
+> Importable as `import lake` — the Python package keeps the short name; the
+> repository name reflects the project's intent.
 
 This is a refactor of the original [`lake-main`](../lake-main) notebook-style
 project into an installable package with a CLI, type-checked configs, and a
