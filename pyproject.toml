@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# pyproject.toml
+#
+# Build/installation manifest for the `lake` package.
+#
+# Once installed (e.g. `pip install -e .` from the project root), the package
+# becomes importable as `import lake` and the `lake` CLI is exposed as a
+# console script (see [project.scripts] below).
+# ---------------------------------------------------------------------------
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lake"
+version = "0.1.0"
+description = "Lake-area regression with Transformer/tree models and SHAP explainability."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "lake-main contributors" }]
+
+# Runtime dependencies. Versions are intentionally loose so the package
+# works on most modern environments; pin them in a separate constraints
+# file if reproducibility matters.
+dependencies = [
+    "numpy>=1.22",
+    "pandas>=1.5",
+    "scikit-learn>=1.1",
+    "xgboost>=1.7",
+    "shap>=0.41",
+    "torch>=1.13",
+    "matplotlib>=3.6",
+    "seaborn>=0.12",
+    "ml_collections>=0.1.1",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Developer extras: testing, notebook usage, linting.
+dev = [
+    "pytest>=7.0",
+    "jupyter>=1.0",
+    "ipykernel>=6.0",
+]
+
+# Expose `lake` as a CLI entry point. After `pip install -e .` the user can
+# run `lake train ...`, `lake explain ...`, etc. from any directory.
+[project.scripts]
+lake = "lake.cli:main"
+
+# ---------------------------------------------------------------------------
+# setuptools-specific configuration: tell it where the package source lives
+# (src-layout) and which directories to package.
+# ---------------------------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+lake = ["py.typed"]

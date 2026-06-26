@@ -1,0 +1,34 @@
+# ---------------------------------------------------------------------------
+# Example training config. Pass with `lake train --config configs/transformer.yaml`.
+# Any keys you omit fall back to the defaults in lake/config.py.
+# ---------------------------------------------------------------------------
+
+exp_name: transformer_v1
+
+transformer:
+  dim_model: 11      # must equal number of features (Evapotranspiration..Lat)
+  mlp_dim: 256
+  num_heads: 1
+  num_layers: 6
+  dropout_rate: 0.3
+  activation: relu
+  num_class: 1
+
+training:
+  batch_size: 256
+  learning_rate: 0.005
+  weight_decay: 0.05
+  epochs: 200
+  early_stop_patience: 50
+  early_stop_min_delta: 50.0
+  num_workers: 4
+  # debug_row_limit: 500   # uncomment for fast iteration
+
+paths:
+  data_csv: data/dataset.csv
+  lake_density_csv: data/Lake_Density_Edited.csv
+  outputs_dir: outputs
+  figures_dir: outputs/figures
+  checkpoints_dir: outputs/checkpoints
+  predictions_dir: outputs/predictions
+  shap_dir: outputs/shap

@@ -1,0 +1,29 @@
+# Generated artefacts
+outputs/figures/*
+outputs/checkpoints/*
+outputs/predictions/*
+outputs/shap/*
+outputs/*.csv
+!outputs/figures/.gitkeep
+!outputs/checkpoints/.gitkeep
+!outputs/predictions/.gitkeep
+!outputs/shap/.gitkeep
+
+# Input data (project-specific)
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
